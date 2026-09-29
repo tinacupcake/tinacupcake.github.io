@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Valle de los Guardianes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&display=swap">
+<style>
+/* Layout: portada tipo "mapa de juegos": saludo con tus criaturas en 3D arriba, monedas al costado, y dos estantes de juegos (aprender / recreo) listos para crecer. */
+:root{
+  color-scheme: light;
+  --ink:#1D2356; --ink-soft:#4A5188; --card:#FFFFFF; --shadow:#1D2356; --soft:#EEF2FA; --line:#AEB6D4;
+  --gold:#F2B233; --gold-lt:#FFE58A; --gold-dk:#C98A12;
+  --learn:#6A4C93; --play:#FF8C42;
+  --sky1:#BFE3FF; --sky2:#E4E8FF; --sky3:#F6ECFF; --hill1:#9ED9B9; --hill2:#B7E6CB; --hill3:#D3EEDD; --cloud:rgba(255,255,255,.92);
+  --display:"Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Nunito", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme: dark; --ink:#EEF1FF; --ink-soft:#A8B0DD; --card:#1D2552; --shadow:#05081C; --soft:#262F66; --line:#4E5790;
+  --sky1:#0C1033; --sky2:#1B1650; --sky3:#2C1D5E; --hill1:#1A1745; --hill2:#221D55; --hill3:#2C2668; --cloud:rgba(170,160,255,.12); } }
+:root[data-theme="dark"]{
+  color-scheme: dark; --ink:#EEF1FF; --ink-soft:#A8B0DD; --card:#1D2552; --shadow:#05081C; --soft:#262F66; --line:#4E5790;
+  --sky1:#0C1033; --sky2:#1B1650; --sky3:#2C1D5E; --hill1:#1A1745; --hill2:#221D55; --hill3:#2C2668; --cloud:rgba(170,160,255,.12); }
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0; color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.45;
+  background-color:var(--sky2); background-image:linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 48%, var(--sky3) 100%); background-attachment:fixed}
+[hidden]{display:none !important}
+button{font:inherit; color:inherit; cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink); outline-offset:3px}
+.scenery{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden}
+.scenery .hills{position:absolute; left:0; bottom:0; width:100%; height:24vh; min-height:130px}
+.h1{fill:var(--hill1)} .h2{fill:var(--hill2)} .h3{fill:var(--hill3)}
+.cloud{position:absolute; width:220px; height:64px; border-radius:64px; background:var(--cloud); animation:drift 80s linear infinite}
+.cloud::before,.cloud::after{content:""; position:absolute; background:inherit; border-radius:50%}
+.cloud::before{width:90px; height:90px; left:36px; top:-44px}
+.cloud::after{width:120px; height:110px; left:92px; top:-62px}
+.c1{top:10%; left:-260px} .c2{top:30%; left:-260px; transform:scale(.7); animation-duration:115s; animation-delay:-55s} .c3{top:4%; left:-260px; transform:scale(.5); animation-duration:95s; animation-delay:-30s}
+@keyframes drift{to{translate:calc(100vw + 520px) 0}}
+.wrap{position:relative; z-index:1; max-width:1040px; margin:0 auto; padding-inline:16px; padding-block:18px 60px; display:grid; gap:34px}
+
+.top{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:10px; margin-right:auto}
+.brand-mark{width:46px; height:46px; border-radius:14px; background:linear-gradient(180deg,#8E74FF,#5B45D6); border:3px solid #1D2356; display:grid; place-items:center; box-shadow:0 4px 0 var(--shadow); transform:rotate(-6deg)}
+.brand-mark svg{width:30px; height:30px}
+.brand-name{font-family:var(--display); font-size:24px; line-height:1}
+.brand-name small{display:block; font-family:var(--body); font-weight:900; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-top:3px}
+.coins{display:inline-flex; align-items:center; gap:8px; border:2.5px solid #1D2356; border-radius:999px; padding:4px 16px 4px 5px; font-weight:900; font-size:18px; background:linear-gradient(180deg, var(--gold-lt), var(--gold)); color:#1D2356; box-shadow:0 3px 0 var(--shadow); font-variant-numeric:tabular-nums; text-decoration:none}
+.coin{width:30px; height:30px; flex:none}
+
+.sticker{background:var(--card); border:3px solid var(--ink); border-radius:22px; box-shadow:0 6px 0 var(--shadow), 0 18px 30px -16px rgba(18,22,60,.45)}
+
+/* hero */
+.hero{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:20px; align-items:center}
+.hello{font-family:var(--display); font-weight:400; font-size:clamp(44px, 8vw, 84px); line-height:.95; margin:0; letter-spacing:.5px; text-wrap:balance;
+  color:#fff; -webkit-text-stroke:2.5px #1D2356; paint-order:stroke fill; text-shadow:0 5px 0 #1D2356, 0 14px 20px rgba(0,0,0,.2)}
+.hello span{color:var(--gold-lt)}
+.switch{margin-top:14px; background:none; border:0; padding:0; font-weight:800; font-size:15px; color:var(--ink-soft); text-decoration:underline; text-underline-offset:3px}
+.sub{font-size:19px; font-weight:800; color:var(--ink-soft); margin:14px 0 0; max-width:34ch}
+.stage3d{position:relative; aspect-ratio:5/4; max-width:100%; border-radius:26px; overflow:hidden;
+  background:radial-gradient(90% 70% at 50% 95%, rgba(255,255,255,.75), transparent 70%), radial-gradient(60% 40% at 50% 100%, var(--hill1), transparent 80%)}
+.stage3d canvas{position:absolute; inset:0; width:100%; height:100%; display:block; cursor:pointer; touch-action:pan-y}
+.stage-tag{position:absolute; left:50%; bottom:8px; translate:-50% 0; background:rgba(29,35,86,.82); color:#fff; font-weight:800; font-size:13px; border-radius:999px; padding:4px 12px; white-space:nowrap; pointer-events:none}
+@media (max-width:760px){ .hero{grid-template-columns:1fr} .stage3d{aspect-ratio:16/10} }
+
+/* monedas */
+.bank{display:grid; grid-template-columns:auto minmax(0,1fr); gap:22px; align-items:center; padding:20px 22px}
+.bank-big{display:grid; justify-items:center; gap:2px; padding-right:22px; border-right:3px dashed var(--line)}
+.bank-big .coin{width:64px; height:64px}
+.bank-big b{font-family:var(--display); font-weight:400; font-size:48px; line-height:1; font-variant-numeric:tabular-nums}
+.bank-big small{font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft)}
+.bank h2{font-family:var(--display); font-weight:400; font-size:26px; margin:0 0 10px}
+.rules{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin:0; padding:0; list-style:none}
+.rules li{display:grid; gap:2px; background:var(--soft); border:2.5px solid var(--ink); border-radius:16px; padding:8px 10px; min-width:0}
+.rules b{font-family:var(--display); font-weight:400; font-size:22px; line-height:1.1}
+.rules span{font-weight:800; font-size:13px; line-height:1.25; color:var(--ink-soft)}
+.rules li.spend{background:linear-gradient(180deg, var(--gold-lt), var(--gold)); color:#1D2356}
+.rules li.spend span{color:#1D2356}
+.ledger{margin:10px 0 0; font-weight:800; font-size:14px; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+@media (max-width:760px){ .bank{grid-template-columns:1fr} .bank-big{border-right:0; border-bottom:3px dashed var(--line); padding:0 0 14px} .rules{grid-template-columns:repeat(2, minmax(0,1fr))} }
+
+/* estantes de juegos */
+.shelf{display:grid; gap:14px}
+.shelf-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.shelf-head h2{font-family:var(--display); font-weight:400; font-size:32px; margin:0; line-height:1}
+.shelf-head p{margin:0; font-weight:800; color:var(--ink-soft)}
+.games{display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:20px}
+.game{display:grid; grid-template-rows:auto 1fr; text-decoration:none; overflow:hidden; transition:transform .15s, box-shadow .15s}
+a.game:hover{transform:translateY(-4px) rotate(-.4deg); box-shadow:0 10px 0 var(--shadow), 0 26px 34px -16px rgba(18,22,60,.5)}
+a.game:active{transform:translateY(3px); box-shadow:0 2px 0 var(--shadow)}
+.art{position:relative; aspect-ratio:16/9; overflow:hidden; border-bottom:3px solid var(--ink);
+  background:radial-gradient(120% 100% at 25% 10%, var(--g-lt) 0%, var(--g) 55%, var(--g-dk) 100%)}
+.art .deco{position:absolute; inset:0; width:100%; height:100%}
+.art img{position:absolute; right:4%; bottom:-4%; width:48%; max-width:100%; aspect-ratio:1; filter:drop-shadow(0 8px 6px rgba(0,0,0,.28))}
+.art .badge{position:absolute; left:12px; top:12px; display:inline-flex; align-items:center; gap:6px; background:#fff; color:#1D2356; border:2.5px solid #1D2356; border-radius:999px; padding:2px 10px 2px 4px; font-weight:900; font-size:13px; box-shadow:0 3px 0 #1D2356}
+.art .badge .coin{width:20px; height:20px}
+.art .badge.learn{padding-left:10px}
+.info{display:grid; gap:6px; padding:14px 18px 18px; align-content:start}
+.info h3{font-family:var(--display); font-weight:400; font-size:28px; line-height:1.05; margin:0}
+.info p{margin:0; font-weight:700; color:var(--ink-soft)}
+.info .stat{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; font-weight:900; font-size:14px}
+.info .go{font-family:var(--display); font-weight:400; font-size:20px; color:#fff; background:var(--g); border:2.5px solid #1D2356; border-radius:12px; padding:2px 14px; box-shadow:0 3px 0 #1D2356; text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.game.soon{border-style:dashed; box-shadow:none; background:color-mix(in srgb, var(--card) 60%, transparent)}
+.game.soon .art{--g:var(--soft); --g-lt:var(--card); --g-dk:var(--soft); border-bottom-style:dashed; display:grid; place-items:center}
+.game.soon .q{font-family:var(--display); font-size:78px; color:var(--line); line-height:1}
+.teacher{font-weight:800; font-size:14px; color:var(--ink-soft); display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.teacher button{border:2.5px solid var(--ink); background:var(--card); border-radius:999px; padding:4px 12px; font-weight:800}
+@media (prefers-reduced-motion: reduce){ .cloud{animation:none} a.game:hover{transform:none} }
+
+/* vistas nuevas: bienvenida y armado del Guardián */
+.view{display:grid; gap:34px}
+.me-btn{display:inline-flex; align-items:center; gap:8px; border:2.5px solid var(--ink); background:var(--card); border-radius:999px; padding:3px 14px 3px 3px; font-weight:900; font-size:15px; box-shadow:0 3px 0 var(--shadow)}
+.me-btn img{width:36px; height:36px; border-radius:50%; background:var(--soft); object-fit:cover; object-position:50% 12%}
+.me-btn:active{transform:translateY(3px); box-shadow:none}
+.intro{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:center}
+.intro .story{font-size:19px; font-weight:800; color:var(--ink-soft); margin:12px 0 0; max-width:40ch}
+.form{padding:22px; display:grid; gap:16px}
+.form label{font-family:var(--display); font-size:24px; display:block; margin-bottom:6px}
+.form input{width:100%; font:inherit; font-weight:900; font-size:24px; padding:10px 14px; border:3px solid var(--ink); border-radius:14px; background:var(--soft); color:var(--ink)}
+.seg{display:flex; gap:10px; flex-wrap:wrap}
+.seg button{flex:1; min-width:130px; border:3px solid var(--ink); border-radius:14px; padding:10px; font-weight:900; font-size:18px; background:var(--card); box-shadow:0 4px 0 var(--shadow)}
+.seg button[aria-pressed="true"]{background:linear-gradient(180deg,#B9A8FF,#7B61F0); color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; border:3px solid #1D2356; border-radius:16px; padding:12px 24px; font-weight:900; font-size:19px; color:#fff; background:linear-gradient(180deg,#B9A8FF 0%,#7B61F0 50%,#5B45D6 100%); box-shadow:0 5px 0 var(--shadow), inset 0 2px 0 rgba(255,255,255,.45); text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn:active{transform:translateY(4px); box-shadow:0 1px 0 var(--shadow)}
+.btn.ghost{background:var(--card); color:var(--ink); text-shadow:none}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+.editor{display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:22px; align-items:start}
+.ed-stage{position:sticky; top:12px; aspect-ratio:4/5; max-width:100%; border-radius:26px; overflow:hidden; border:3px solid var(--ink); box-shadow:0 6px 0 var(--shadow);
+  background:radial-gradient(80% 60% at 50% 30%, #fff 0%, #E4E8FF 70%), var(--soft)}
+.ed-stage canvas{position:absolute; inset:0; width:100%; height:100%; display:block; cursor:grab; touch-action:pan-y}
+.ed-name{position:absolute; left:0; right:0; top:12px; text-align:center; font-family:var(--display); font-size:26px; color:#1D2356; pointer-events:none}
+.ed-name small{display:block; font-family:var(--body); font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#4A5188}
+.ed-tip{position:absolute; left:50%; bottom:10px; translate:-50% 0; background:rgba(29,35,86,.8); color:#fff; font-weight:800; font-size:13px; padding:4px 12px; border-radius:999px; white-space:nowrap; pointer-events:none}
+.ed-panel{padding:16px; display:grid; gap:14px}
+.tabs{display:flex; gap:6px; flex-wrap:wrap}
+.tabs button{border:2.5px solid var(--ink); border-radius:12px; padding:6px 14px; font-weight:900; background:var(--card)}
+.tabs button[aria-selected="true"]{background:var(--ink); color:var(--card)}
+.grp{display:grid; gap:8px}
+.grp h3{margin:0; font-size:13px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chips button{border:2.5px solid var(--ink); border-radius:999px; padding:6px 14px; font-weight:800; font-size:15px; background:var(--card)}
+.chips button[aria-pressed="true"]{background:linear-gradient(180deg,#B9A8FF,#7B61F0); color:#fff}
+.sw{display:flex; flex-wrap:wrap; gap:8px}
+.sw button{width:40px; height:40px; border-radius:50%; border:3px solid var(--ink); background:var(--sw); box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.sw button[aria-pressed="true"]{outline:4px solid var(--gold); outline-offset:2px}
+.ed-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between}
+@media (max-width:760px){ .intro,.editor{grid-template-columns:1fr} .ed-stage{position:sticky; top:6px; z-index:3; aspect-ratio:auto; height:38vh; min-height:220px; width:100%} .ed-name{display:none} }
+</style>
+</head>
+<body>
+
+<div class="scenery" aria-hidden="true">
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <svg class="hills" viewBox="0 0 1440 320" preserveAspectRatio="none"><path class="h3" d="M0 190C220 120 470 140 720 185C960 228 1210 150 1440 135V320H0Z"/><path class="h2" d="M0 245C300 195 610 228 900 248C1150 265 1300 228 1440 218V320H0Z"/><path class="h1" d="M0 288C210 266 500 276 760 292C1010 307 1250 282 1440 276V320H0Z"/></svg>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="coinSym" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#F2B233" stroke="#1D2356" stroke-width="2.5"/><circle cx="16" cy="16" r="9.5" fill="#FFD84D" stroke="#C98A12" stroke-width="1.5"/><path d="M16 9.6l1.9 3.9 4.3.6-3.1 3 .7 4.3-3.8-2-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="#fff" stroke="#C98A12" stroke-width="1"/></symbol></svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="18" rx="10" ry="12" fill="#fff" stroke="#1D2356" stroke-width="2.5"/><circle cx="12" cy="14" r="2.2" fill="#FF8FC8"/><circle cx="20" cy="21" r="2.8" fill="#8AC926"/><circle cx="14" cy="24" r="1.6" fill="#36B5E8"/></svg></span>
+      <span class="brand-name">Valle de los Guardianes<small>Aprendé · Ganá · Jugá</small></span></div>
+    <button class="me-btn" id="meBtn" type="button" hidden><img id="meImg" alt=""><span id="meTxt">Mi Guardián</span></button>
+    <a class="coins" href="#monedas" id="coinsLink" title="Tus monedas"><svg class="coin" aria-hidden="true"><use href="#coinSym"/></svg><span id="coinTop">0</span></a>
+  </header>
+
+  <!-- 1. BIENVENIDA -->
+  <section class="view intro" id="vIntro" hidden>
+    <div>
+      <h1 class="hello">¡Llegaste al <span>Valle de los Guardianes</span>!</h1>
+      <p class="story">Aparecieron huevos misteriosos por todo el Valle. Para que nazcan y crezcan necesitan a alguien que aprenda con ellos y los cuide. ¿Te animás a ser quien los cuide?</p>
+    </div>
+    <form class="form sticker" id="introForm" autocomplete="off">
+      <div><label for="nameIn">¿Cómo te llamás?</label><input id="nameIn" maxlength="16" placeholder="Tu nombre" required></div>
+      <div><label>¿Cómo querés que te digan?</label>
+        <div class="seg" id="titleSeg"><button type="button" data-title="Guardián" aria-pressed="true">Guardián</button><button type="button" data-title="Guardiana" aria-pressed="false">Guardiana</button></div></div>
+      <div><button class="btn" type="submit">Armar mi personaje →</button></div>
+    </form>
+  </section>
+
+  <!-- 2. ARMAR EL GUARDIÁN -->
+  <section class="view" id="vEditor" hidden>
+    <div><h1 class="hello" style="font-size:clamp(36px,6vw,60px)">Armá tu <span id="edTitle">Guardián</span></h1></div>
+    <div class="editor">
+      <div class="ed-stage" id="edStage"><div class="ed-name" id="edName"></div><span class="ed-tip">Arrastralo para girarlo</span></div>
+      <div class="ed-panel sticker">
+        <div class="seg" id="edGender"><button type="button" data-title="Guardián">Guardián</button><button type="button" data-title="Guardiana">Guardiana</button></div>
+        <div class="tabs" role="tablist" id="edTabs"></div>
+        <div id="edBody" style="display:grid;gap:14px"></div>
+        <div class="ed-actions"><button class="btn ghost" id="edRandom" type="button">Al azar</button><button class="btn" id="edDone" type="button">¡Listo!</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. PORTADA -->
+  <div class="view" id="vHome" hidden>
+  <section class="hero">
+    <div>
+      <h1 class="hello" id="hello">¡Hola!</h1>
+      <p class="sub" id="sub">Aprendé con los juegos de estudio para que tus criaturas nazcan y crezcan. Con las monedas que ganás, jugás en el recreo.</p>
+      <button class="switch" id="switchBtn" type="button">¿No sos vos? Empezar como otro jugador</button>
+    </div>
+    <div class="stage3d" id="stage3d"><span class="stage-tag" id="stageTag">Tocalos para que salten</span></div>
+  </section>
+
+  <section class="bank sticker" id="monedas" aria-labelledby="bankT">
+    <div class="bank-big"><svg class="coin" aria-hidden="true"><use href="#coinSym"/></svg><b id="coinBig">0</b><small>Monedas</small></div>
+    <div>
+      <h2 id="bankT">¿Cómo gano monedas?</h2>
+      <ul class="rules">
+        <li><b>1 estrella</b><span>= 1 moneda en los juegos de estudio</span></li>
+        <li><b>1 diploma</b><span>= 5 monedas más</span></li>
+        <li><b>1 medalla</b><span>de la arena = 3 monedas</span></li>
+        <li class="spend"><b>1 moneda</b><span>= 1 vida en los juegos de recreo</span></li>
+      </ul>
+      <p class="ledger" id="ledger"></p>
+    </div>
+  </section>
+
+  <section class="shelf" aria-labelledby="learnT">
+    <div class="shelf-head"><h2 id="learnT">Para aprender</h2><p>Acá ganás monedas y tus criaturas crecen.</p></div>
+    <div class="games" id="learnGames"></div>
+  </section>
+
+  <section class="shelf" aria-labelledby="playT">
+    <div class="shelf-head"><h2 id="playT">Para el recreo</h2><p>Cada vida cuesta 1 moneda.</p></div>
+    <div class="games" id="playGames"></div>
+  </section>
+
+  <div class="teacher" id="teacher" hidden>Modo docente: las monedas no se gastan. <button type="button" id="resetCoins">Devolver las monedas gastadas</button></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="criaturas.js"></script>
+<script src="avatar.js"></script>
+<script>
+(() => {
+  const C = window.Criaturas, A = window.Avatar, T = window.THREE, $ = id => document.getElementById(id);
+  const COIN = `<svg class="coin" aria-hidden="true"><use href="#coinSym"/></svg>`;
+  const TAB_URL = "https://tinacupcake.github.io/mision-tablas/";
+  const tag = C.TEACHER ? "#docente" : "";
+  const esc = t => String(t || "").replace(/[<>&"]/g, "");
+
+  /* Para sumar un juego nuevo, agregá una línea acá (kind: "learn" o "play"). */
+  const GAMES = [
+    {kind:"learn", name:"Misión Tablas", desc:"Aprendé las tablas del 1 al 10 para que tus criaturas nazcan, evolucionen y ganes diplomas.", href:TAB_URL, color:"#6A4C93", art:"tablas",
+      stat(S){ const d = Object.values(S.t).filter(x => x.dip).length; const st = Object.values(S.t).reduce((a,x) => a + x.s.reduce((b,n) => b + Math.min(3,n), 0), 0); return `${st} de 120 estrellas · ${d} de 10 diplomas`; }},
+    {kind:"play", name:"La Gran Aventura", desc:"Recorré el Valle con tu criatura: saltá obstáculos, esquivá voladores y juntá estrellas.", href:"carrera.html" + tag, color:"#FF8C42", art:"carrera",
+      stat(){ const m = C.mundo(); return m.bestAll ? `Tu récord: ${m.bestAll} puntos` : "¡Estrenala!"; }},
+    {kind:"learn", soon:true, desc:"Muy pronto, otro juego para aprender y ganar más monedas."},
+    {kind:"play", soon:true, desc:"Muy pronto, otro juego para el recreo."}
+  ];
+
+  const S = C.tablas(), OWN = C.owned(S);
+  let ME = A.load();                // {cfg, name, title}
+  let draft = null;                 // avatar que se está armando
+  const gen = () => A.genderOf(ME.title);
+  const startDraft = () => ME.cfg && ME.cfg.g === gen() ? A.normalize(ME.cfg, gen()) : A.random(gen());
+  const views = ["vIntro","vEditor","vHome"];
+  function show(v){ views.forEach(id => $(id).hidden = id !== v); $("meBtn").hidden = v !== "vHome" || !ME.cfg; $("coinsLink").hidden = v !== "vHome"; scrollTo({top:0}); if(v === "vHome") home(); if(v === "vEditor") editor(); }
+
+  /* ---------- monedas ---------- */
+  function paintCoins(){
+    const n = C.coins(), e = C.earned(), used = C.mundo().spent || 0;
+    $("coinTop").textContent = n; $("coinBig").textContent = n;
+    $("ledger").textContent = C.TEACHER ? "Modo docente: monedas sin límite." : `Ganaste ${e} ${e === 1 ? "moneda" : "monedas"} y usaste ${used}.` + (e === 0 ? " Empezá por Misión Tablas para ganar las primeras." : "");
+  }
+  if(C.TEACHER){ $("teacher").hidden = false; $("resetCoins").onclick = () => { const m = C.mundo(); m.spent = 0; C.saveMundo(m); paintCoins(); }; }
+
+  /* ---------- 1. bienvenida ---------- */
+  let title = ME.title || "Guardián";
+  $("titleSeg").addEventListener("click", e => { const b = e.target.closest("[data-title]"); if(!b) return; title = b.dataset.title; [...$("titleSeg").children].forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  $("introForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const n = $("nameIn").value.trim().replace(/\s+/g, " "); if(!n){ $("nameIn").focus(); return; }
+    ME.name = n.charAt(0).toUpperCase() + n.slice(1); ME.title = title; A.save(null, ME.name, title);
+    draft = startDraft(); show("vEditor");
+  });
+  function intro(){
+    $("nameIn").value = ME.name || "";
+    [...$("titleSeg").children].forEach(x => x.setAttribute("aria-pressed", x.dataset.title === title));
+    show("vIntro"); setTimeout(() => $("nameIn").focus(), 50);
+  }
+
+  /* ---------- 2. armar el Guardián ---------- */
+  const TABS = [
+    {id:"piel", label:"Piel", groups:[{key:"skin", title:"Tono de piel", sw:true}]},
+    {id:"pelo", label:"Pelo", groups:[{key:"hair", title:"Peinado"},{key:"hairC", title:"Color", sw:true}]},
+    {id:"cara", label:"Cara", groups:[{key:"eyes", title:"Ojos"},{key:"brows", title:"Cejas"},{key:"mouth", title:"Boca"}]},
+    {id:"detalles", label:"Detalles", groups:[{key:"freckles", title:"Pecas y lunares"},{key:"mark", title:"En la cara"},{key:"glasses", title:"Anteojos"},{key:"earrings", title:"Aros"},{key:"tattoo", title:"Tatuaje en el brazo (se ve con manga corta)"}]},
+    {id:"ropa", label:"Arriba", groups:[{key:"top", title:"Qué tiene puesto"},{key:"pattern", title:"Estampado"},{key:"topC", title:"Color", sw:true}]},
+    {id:"abajo", label:"Abajo", groups:[{key:"bottom", title:"Qué tiene puesto"},{key:"bottomC", title:"Color", sw:true},{key:"shoeC", title:"Zapatillas", sw:true}]},
+    {id:"acc", label:"Accesorios", groups:[{key:"hat", title:"En la cabeza"},{key:"hatC", title:"Color", sw:true},{key:"neck", title:"En el cuello"},{key:"back", title:"En la espalda"},{key:"accC", title:"Color del cuello, la espalda y los moños", sw:true}]}
+  ];
+
+  let tab = "pelo", ED = null;
+  function editor(){
+    $("edTitle").textContent = ME.title || "Guardián";
+    [...$("edGender").children].forEach(b => b.setAttribute("aria-pressed", b.dataset.title === (ME.title || "Guardián")));
+    $("edName").innerHTML = `<small>${esc(ME.title)}</small>${esc(ME.name)}`;
+    $("edTabs").innerHTML = TABS.map(t => `<button type="button" role="tab" data-tab="${t.id}" aria-selected="${t.id === tab}">${t.label}</button>`).join("");
+    paintEd(); edStage(); edRebuild();
+  }
+  function paintEd(){
+    const t = TABS.find(x => x.id === tab);
+    $("edBody").innerHTML = t.groups.map(g => {
+      const opts = A.optsFor(gen(), g.key);
+      if(!g.sw && opts.length < 2) return "";
+      const inner = g.sw ? `<div class="sw">${opts.map(c => `<button type="button" data-k="${g.key}" data-v="${c}" style="--sw:${c}" aria-label="Color ${c}" aria-pressed="${draft[g.key] === c}"></button>`).join("")}</div>`
+                         : `<div class="chips">${opts.map(o => `<button type="button" data-k="${g.key}" data-v="${o.id}" aria-pressed="${draft[g.key] === o.id}">${o.label}</button>`).join("")}</div>`;
+      return `<div class="grp"><h3>${g.title}</h3>${inner}</div>`;
+    }).join("");
+    [...$("edTabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  }
+  $("edTabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if(!b) return; tab = b.dataset.tab; paintEd(); });
+  $("edBody").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if(!b) return; draft[b.dataset.k] = b.dataset.v; paintEd(); edRebuild(true); });
+  $("edGender").addEventListener("click", e => {
+    const b = e.target.closest("[data-title]"); if(!b || b.dataset.title === ME.title) return;
+    ME.title = b.dataset.title; title = ME.title; A.save(null, undefined, ME.title);
+    draft = A.normalize(Object.assign({}, A.DEFAULTS[gen()], {skin:draft.skin, hairC:draft.hairC}), gen());
+    editor(); edRebuild(true);
+  });
+  $("edRandom").onclick = () => { draft = A.random(gen()); paintEd(); edRebuild(true); };
+  $("edDone").onclick = () => { ME.cfg = Object.assign({}, draft); A.save(ME.cfg); location.hash = tag.replace("#","") || ""; if(!tag) history.replaceState(null, "", location.pathname + location.search); show("vHome"); };
+  function edStage(){
+    if(!C.HAS3D || ED) return;
+    const box = $("edStage"), r = new T.WebGLRenderer({antialias:true, alpha:true}); r.setPixelRatio(Math.min(2, devicePixelRatio || 1)); box.prepend(r.domElement);
+    const sc = new T.Scene(); A.lights(sc); const cam = new T.PerspectiveCamera(26, 1, .1, 50);
+    ED = {r, sc, cam, box, rot:-.25, vel:0, av:null, hop:0};
+    const fit = () => { const w = box.clientWidth, h = box.clientHeight; r.setSize(w, h, false); cam.aspect = w/h; const d = Math.max(6.4, 3.0/(Math.tan(13*Math.PI/180)*Math.min(1, cam.aspect)*2) + 1); cam.position.set(0, 1.25, d); cam.lookAt(0, 1.1, 0); cam.updateProjectionMatrix(); };
+    fit(); addEventListener("resize", fit);
+    let down = null, moved = 0;
+    r.domElement.addEventListener("pointerdown", e => { down = e.clientX; moved = 0; try{ r.domElement.setPointerCapture(e.pointerId); }catch(_){} });
+    r.domElement.addEventListener("pointermove", e => { if(down === null) return; const dx = e.clientX - down; down = e.clientX; moved += Math.abs(dx); ED.rot += dx*.012; ED.vel = dx*.012; });
+    r.domElement.addEventListener("pointerup", () => { if(down !== null && moved < 6) ED.hop = performance.now()/1000; down = null; });
+    let last = 0;
+    const loop = now => {
+      requestAnimationFrame(loop);
+      if($("vEditor").hidden || !ED.av) return;
+      const time = now/1000, dt = Math.min(.05, time - (last || time)); last = time;
+      if(Math.abs(ED.vel) > .0001 && down === null){ ED.rot += ED.vel*.5; ED.vel *= .92; }
+      const p = (time - ED.hop)/.7; const hop = p >= 0 && p < 1 ? Math.sin(p*Math.PI) : 0;
+      A.pose(ED.av, hop ? "jump" : (Math.floor(time/4) % 3 === 2 ? "wave" : "idle"), time, dt);
+      ED.av.root.position.y = hop*.9; ED.av.root.rotation.y = ED.rot + Math.sin(time*.5)*.2;
+      ED.av.shadow.position.y = .01 - hop*.9;
+      r.render(sc, cam);
+    };
+    requestAnimationFrame(loop);
+  }
+  function edRebuild(bounce){
+    if(!ED) return;
+    if(ED.av) ED.sc.remove(ED.av.root);
+    ED.av = A.build(draft); ED.sc.add(ED.av.root);
+    if(bounce) ED.hop = performance.now()/1000;
+  }
+
+  /* ---------- 3. portada ---------- */
+  const DECO = {
+    tablas: `<svg class="deco" viewBox="0 0 320 180" aria-hidden="true"><g font-family="Lilita One, Arial Rounded MT Bold, sans-serif" fill="#fff"><text x="26" y="118" font-size="96" opacity=".9" stroke="#1D2356" stroke-width="5" paint-order="stroke">7×8</text><text x="40" y="160" font-size="30" opacity=".45">2 4 6 8 10</text><text x="200" y="40" font-size="26" opacity=".35">×</text></g></svg>`,
+    carrera: `<svg class="deco" viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130 Q160 112 320 124 V180 H0Z" fill="#7CC796" stroke="#1D2356" stroke-width="3"/><path d="M0 148 Q160 134 320 144 V160 Q160 150 0 166Z" fill="#EFD29A"/><g stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"><path d="M24 58h60M40 78h40M18 98h52"/></g><g stroke="#1D2356" stroke-width="3"><rect x="120" y="112" width="22" height="22" rx="4" fill="#FF5A5F"/><rect x="170" y="104" width="22" height="22" rx="4" fill="#1FB8A8"/><rect x="170" y="82" width="22" height="22" rx="4" fill="#FFC23C"/></g><path d="M140 66l4 8 9 1-6 6 1 9-8-4-8 4 1-9-6-6 9-1z" fill="#FFD84D" stroke="#1D2356" stroke-width="2.5"/></svg>`
+  };
+  function thumbFor(game){
+    if(!C.HAS3D) return "";
+    try {
+      if(game.art === "carrera") return ME.cfg ? `<img alt="" src="${A.thumb(ME.cfg, 240, "jump")}">` : "";
+      const pick = OWN.length ? OWN[OWN.length-1] : {t:7, stg:0};
+      return `<img alt="" src="${C.thumb(pick.t, pick.stg, "idle", 240)}">`;
+    } catch(e){ return ""; }
+  }
+  function card(g){
+    if(g.soon) return `<div class="game sticker soon"><div class="art"><span class="q">?</span></div><div class="info"><h3>Próximamente</h3><p>${g.desc}</p></div></div>`;
+    const lt = C.mixHex(g.color, "#ffffff", .35), dk = C.mixHex(g.color, "#000000", .25);
+    const badge = g.kind === "learn" ? `<span class="badge learn">Gana monedas</span>` : `<span class="badge">${COIN} 1 moneda = 1 vida</span>`;
+    return `<a class="game sticker" href="${g.href}" style="--g:${g.color};--g-lt:${lt};--g-dk:${dk}"><div class="art">${DECO[g.art] || ""}${thumbFor(g)}${badge}</div>
+      <div class="info"><h3>${g.name}</h3><p>${g.desc}</p><div class="stat"><span>${g.stat ? g.stat(S) : ""}</span><span class="go">Jugar</span></div></div></a>`;
+  }
+  let HS = null;
+  function home(){
+    const nm = esc(ME.name);
+    $("hello").innerHTML = nm ? `¡Hola, <span>${nm}</span>!` : "¡Hola!";
+    const n = OWN.length;
+    $("sub").textContent = n ? `${ME.title} de ${n} ${n === 1 ? "criatura" : "criaturas"}. Aprendé con los juegos de estudio para que crezcan, y con las monedas que ganás jugá en el recreo.`
+                             : `${ME.title} de Criaturas: tus huevos te esperan en Misión Tablas. Cuando aprendas, van a empezar a nacer.`;
+    if(ME.cfg){ $("meImg").src = A.thumb(ME.cfg, 96, "idle"); $("meTxt").textContent = "Mi " + ME.title; }
+    $("learnGames").innerHTML = GAMES.filter(g => g.kind === "learn").map(card).join("");
+    $("playGames").innerHTML = GAMES.filter(g => g.kind === "play").map(card).join("");
+    paintCoins(); homeStage();
+  }
+  $("switchBtn").onclick = () => {
+    const m = C.mundo(); delete m.avatar; delete m.name; delete m.title; C.saveMundo(m);
+    try { const t = JSON.parse(localStorage.getItem("misionTablas.v1") || "{}"); t.name = ""; localStorage.setItem("misionTablas.v1", JSON.stringify(t)); } catch(e){}
+    ME = {cfg:null, name:"", title:"Guardián"}; title = "Guardián"; intro();
+  };
+  $("meBtn").onclick = () => { draft = startDraft(); show("vEditor"); };
+
+  /* escenario de la portada: tu Guardián con tus criaturas */
+  function homeStage(){
+    const box = $("stage3d");
+    if(!C.HAS3D){ $("stageTag").hidden = true; return; }
+    if(!HS){
+      const r = new T.WebGLRenderer({antialias:true, alpha:true}); r.setPixelRatio(Math.min(2, devicePixelRatio || 1)); box.prepend(r.domElement);
+      const sc = new T.Scene(); C.addLights(sc);
+      HS = {r, sc, cam:new T.PerspectiveCamera(30, 1, .1, 100), items:[]};
+      const ray = new T.Raycaster(), v = new T.Vector2();
+      r.domElement.addEventListener("pointerdown", e => {
+        const b = r.domElement.getBoundingClientRect(); v.set((e.clientX - b.left)/b.width*2 - 1, -(e.clientY - b.top)/b.height*2 + 1); ray.setFromCamera(v, HS.cam);
+        let hit = null; HS.items.forEach(it => { if(ray.intersectObject(it.root, true).length) hit = it; });
+        (hit ? [hit] : HS.items).forEach((it, i) => it.jump = performance.now()/1000 + (hit ? 0 : i*.12));
+      });
+      addEventListener("resize", () => HS.fit && HS.fit());
+      let last = 0;
+      const loop = now => {
+        requestAnimationFrame(loop);
+        if(box.offsetParent === null) return;
+        const time = now/1000, dt = Math.min(.05, time - (last || time)); last = time;
+        HS.items.forEach(it => {
+          const p = it.jump ? (time - it.jump)/.8 : 2, jumping = p >= 0 && p < 1;
+          if(it.av){
+            A.pose(it.av, jumping ? "jump" : "wave", time, dt);
+            const y = jumping ? Math.sin(p*Math.PI)*1.0 : 0;
+            it.root.position.y = it.y0 + y; it.root.rotation.y = it.rot0 + (jumping ? p*Math.PI*2 : Math.sin(time*.5)*.15);
+            it.av.shadow.position.y = .01 - y;
+          } else {
+            const c = it.c; let y = Math.sin(time*2 + it.ph)*.05, spin = 0, rz = 0;
+            if(it.egg){ const k = time % 2.6; if(k > 1.6 && k < 2.3) rz = Math.sin((k-1.6)*18)*.13*(1-(k-1.6)/.7); }
+            if(jumping){ y += Math.sin(p*Math.PI)*1.1; spin = p*Math.PI*2; }
+            c.root.position.y = it.y0 + y; c.root.rotation.set(0, it.rot0 + Math.sin(time*.5 + it.ph)*.35 + spin, rz);
+            c.shadow.position.y = -1.44 - y*1/(c.root.scale.y || 1);
+            C.animate(c, time, dt);
+          }
+        });
+        HS.r.render(HS.sc, HS.cam);
+      };
+      requestAnimationFrame(loop);
+    }
+    // rearmar el grupo (por si cambió el Guardián)
+    HS.items.forEach(it => HS.sc.remove(it.top || it.root)); HS.items = [];
+    const crit = OWN.slice().sort((a,b) => b.stg - a.stg).slice(0, ME.cfg ? 2 : 3);
+    const egg = !crit.length;
+    const list = egg ? [{t:7, stg:0, egg:true}] : crit;
+    const slots = ME.cfg ? (list.length === 1 ? [1.9] : [-2.5, 2.5]) : (list.length === 1 ? [0] : list.length === 2 ? [-1.7, 1.7] : [0, -3.1, 3.1]);
+    list.forEach((o, i) => {
+      const c = C.build3D(o.t, o.stg, "idle"); const x = slots[i];
+      const k = ME.cfg ? .78 : 1; c.root.scale.setScalar(k);
+      c.root.position.set(x, 0, ME.cfg ? -.6 : 0); HS.sc.add(c.root);
+      HS.items.push({c, root:c.root, y0:-(1 - k)*1.42, rot0: x ? -x*.1 : -.3, ph:i*1.3, egg:o.egg});
+    });
+    if(ME.cfg){
+      const av = A.build(ME.cfg, .62); const g = new T.Group(); g.add(av.root); g.position.set(ME.cfg && list.length === 1 ? -.8 : 0, -1.42, .6); HS.sc.add(g);
+      av.root.scale.setScalar(1.05);
+      HS.items.unshift({av, root:av.root, top:g, y0:0, rot0:0, ph:0});
+    }
+    const wide = (ME.cfg ? 1 : 0) + list.length;
+    HS.fit = () => { const w = box.clientWidth, h = box.clientHeight; HS.r.setSize(w, h, false); HS.cam.aspect = w/h; const need = wide <= 1 ? 3.4 : wide === 2 ? 5.8 : 8.2; const d = Math.max(7.4, need/(2*Math.tan(15*Math.PI/180)*HS.cam.aspect) + 1.5); HS.cam.position.set(0, .6, d); HS.cam.lookAt(0, .15, 0); HS.cam.updateProjectionMatrix(); };
+    HS.fit();
+    $("stageTag").textContent = egg ? "Tu huevo te espera en Misión Tablas" : "Tocalos para que salten";
+  }
+
+  /* ---------- inicio ---------- */
+  if(!ME.name) intro();
+  else if(!ME.cfg || /(^|[#&])avatar\b/.test(location.hash)){ draft = startDraft(); show("vEditor"); }
+  else show("vHome");
+  addEventListener("storage", () => { if(!$("vHome").hidden) paintCoins(); });
+  addEventListener("pageshow", () => { if(!$("vHome").hidden) paintCoins(); });
+})();
+</script>
+</body>
+</html>
